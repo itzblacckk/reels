@@ -86,7 +86,9 @@ const IGReelsDownloader: React.FC = () => {
           <a href="#" className="text-white hover:text-pink-500">Home</a>
           <a href="#" className="text-white hover:text-pink-500">About Us</a>
           <a href="#" className="text-white hover:text-pink-500">Services</a>
-          <a href="#" className="text-white hover:text-pink-500">Contact Us</a>
+         <a href="/app.apk" download className="bg-pink-600 text-white py-2 px-4 rounded-lg hover:bg-pink-700">
+            App Download
+          </a>
         </nav>
       </header>
       <Transition
@@ -103,7 +105,9 @@ const IGReelsDownloader: React.FC = () => {
             <a href="#" className="block px-3 py-2 rounded-md text-base font-medium hover:text-red-600">Home</a>
             <a href="#" className="block px-3 py-2 rounded-md text-base font-medium hover:text-red-600">About Us</a>
             <a href="#" className="block px-3 py-2 rounded-md text-base font-medium hover:text-red-600">Services</a>
-            <a href="#" className="block px-3 py-2 rounded-md text-base font-medium hover:text-red-600">Contact Us</a>
+           <a href="/app.apk" download className="bg-pink-600 text-white py-2 px-4 rounded-lg hover:bg-pink-700">
+            App Download
+          </a>
           </div>
         </nav>
       </Transition>
