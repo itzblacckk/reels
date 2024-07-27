@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import { Transition } from '@headlessui/react';
 import React, { useState, ChangeEvent } from 'react';
 import ShimmerButton from '@/components/magicui/shimmer-button';
@@ -38,16 +38,39 @@ const slugs: string[] = [
   'figma',
 ];
 
-const IGReelsDownloader: React.FC = () => {
-  const [url, setUrl] = useState<string>('');
+interface DownloadData {
+  thumbnail_link: string;
+  download_link: string;
+}
+
+export default function IGReelsDownloader() {
   const [isNavOpen, setNavOpen] = useState<boolean>(false);
+  const [data, setData] = useState<DownloadData | null>(null);
+  const [url, setUrl] = useState<string>('');
 
   const handleUrlChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUrl(e.target.value);
   };
 
   const handleDownload = () => {
-    console.log('Download URL:', url);
+    const apiUrl = "http://localhost:3000/api/reels";
+    const payload = { url };
+
+    fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(response => response.json())
+      .then(result => {
+        setData(result.data[0]);
+        console.log('Download Data:', result.data);
+      })
+      .catch(error => {
+        console.error('Error fetching download data:', error);
+      });
   };
 
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
@@ -86,7 +109,7 @@ const IGReelsDownloader: React.FC = () => {
           <a href="#" className="text-white hover:text-pink-500">Home</a>
           <a href="#" className="text-white hover:text-pink-500">About Us</a>
           <a href="#" className="text-white hover:text-pink-500">Services</a>
-         <a href="/app.apk" download className="bg-pink-600 text-white py-2 px-4 rounded-lg hover:bg-pink-700">
+          <a href="/app.apk" download className="text-white items-center">
             App Download
           </a>
         </nav>
@@ -105,9 +128,9 @@ const IGReelsDownloader: React.FC = () => {
             <a href="#" className="block px-3 py-2 rounded-md text-base font-medium hover:text-red-600">Home</a>
             <a href="#" className="block px-3 py-2 rounded-md text-base font-medium hover:text-red-600">About Us</a>
             <a href="#" className="block px-3 py-2 rounded-md text-base font-medium hover:text-red-600">Services</a>
-           <a href="/app.apk" download className="bg-pink-600 text-white py-2 px-4 rounded-lg hover:bg-pink-700">
-            App Download
-          </a>
+            <a href="/app.apk" download className="text-white">
+              App Download
+            </a>
           </div>
         </nav>
       </Transition>
@@ -115,7 +138,7 @@ const IGReelsDownloader: React.FC = () => {
       <div className="flex flex-col items-center justify-center">
         <IconCloud iconSlugs={slugs} />
 
-        <div className="w-full max-w-md flex items-center relative top-[-350px]  bg-white bg-opacity-10 backdrop-blur-md rounded-[50px] text-white border border-pink-500 p-2 mb-6">
+        <div className="w-full max-w-md flex items-center relative top-[-350px] bg-white bg-opacity-10 backdrop-blur-md rounded-[50px] text-white border border-pink-500 p-2 mb-6">
           <img
             aria-hidden="true"
             alt="link-icon"
@@ -131,11 +154,35 @@ const IGReelsDownloader: React.FC = () => {
           />
         </div>
 
-        <ShimmerButton className='relative top-[-350px]'  onClick={handleDownload}>
-          <span className="text-center text-sm font-medium  leading-none tracking-tight text-white">
+        <ShimmerButton className='relative top-[-350px]' onClick={handleDownload}>
+          <span className="text-center text-sm font-medium leading-none tracking-tight text-white">
             Download
           </span>
         </ShimmerButton>
+
+        {data && (
+          <div className="relative top-[-350px] mt-6">
+            <div className="bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-4 text-white">
+              <img src={data.thumbnail_link} alt="Thumbnail" className="w-full rounded-lg mb-4" />
+              <div className="flex space-x-4">
+                <a
+                  href={data.download_link}
+                  download
+                  className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  Download Reel
+                </a>
+                <a
+                  href={data.thumbnail_link}
+                  download
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  Download Thumbnail
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* About Section */}
@@ -169,36 +216,23 @@ const IGReelsDownloader: React.FC = () => {
           <li>User-Friendly Interface: Our platform is designed with simplicity and ease of use in mind.</li>
           <li>High-Quality Downloads: Ensure that your downloaded Reels maintain their original quality.</li>
           <li>Safe and Secure: We prioritize your privacy and security.</li>
-          <li>24/7 Customer Support: Our dedicated support team is available around the clock.</li>
-          <li>Regular Updates: We continuously update our platform to improve performance.</li>
         </ul>
       </div>
 
-      {/* About Developer Section */}
-      <div className="p-4 bg-white bg-opacity-10 backdrop-blur-md rounded-lg text-white mb-4">
-        <h2 className="text-2xl font-bold mb-2">About the Developer</h2>
-        <div className="flex items-center mb-2">
-          <img src="/yash.jpg" alt="Developer Avatar" className="w-30 h-40 rounded-[10px] mr-2" />
-          <div>
-            <h3 className="text-lg font-bold">Yash Mhatre</h3>
-            <p className="text-gray-300">Passionate developer with expertise in React and frontend development.</p>
-          </div>
-        </div>
+      {/* App Download Section */}
+      <div className="p-4 bg-white bg-opacity-10 backdrop-blur-md rounded-lg text-white">
+        <h2 className="text-2xl font-bold mb-2">Download Our App</h2>
         <p className="mb-2">
-          Yash Mhatre is the creator of IG Reels Downloader, aiming to provide a convenient solution for Instagram Reels enthusiasts.
+          Get the IG Reels Downloader app for seamless and convenient access to all our features on your mobile device.
         </p>
-        <p className="mb-2">
-          If you have any feedback or suggestions for IG Reels Downloader, Yash would love to hear from you!
-        </p>
+        <a
+          href="/app.apk"
+          download
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Download App
+        </a>
       </div>
-
-      {/* Footer */}
-      <footer className="w-full py-4 bg-white bg-opacity-10 backdrop-blur-md rounded-lg text-white text-center">
-        <p>&copy; 2024 IGReelsDownloader. All rights reserved.</p>
-        <p>Follow us on <a href="#" className="text-pink-600 hover:text-pink-700">Instagram</a>, <a href="#" className="text-pink-600 hover:text-pink-700">Twitter</a>, and <a href="#" className="text-pink-600 hover:text-pink-700">Facebook</a></p>
-      </footer>
     </div>
   );
-};
-
-export default IGReelsDownloader;
+}
